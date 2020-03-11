@@ -1,0 +1,7 @@
+ContentLibrary = 
+{
+	string Name = "Rebel animation work",
+	uint64 LibraryId = 572772d4327ffcef,
+	string SourceControlType = "",
+	bool ReadOnly = false,
+},

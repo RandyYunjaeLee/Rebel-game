@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "Meley",
+		uint64 ResourceId = 5731b290d77242e5,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 94,
+		uint FrameSizeY = 111,
+		uint FrameCount = 4,
+		float FrameDelay = 0.166666672,
+		float OriginX = 47,
+		float OriginY = 55,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

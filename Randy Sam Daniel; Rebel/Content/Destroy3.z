@@ -1,0 +1,30 @@
+class Destroy3 : ZilchComponent
+{//This script is applied to the bullet (or other projectile) object.  Usually to the archetype as bullets are 
+//spawned over time in the game. Ensure that you use the naming convention in the script for your game objects, 
+//or change them to match your game objects.
+    //Store a reference object for reccuring use
+    function Initialize(init : CogInitializer)
+    {
+
+        Zero.Connect(this.Owner, Events.CollisionStarted,     this.OnCollisionStarted);
+        Zero.Connect(this.Owner, Events.ExitView, this.OnExitView);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+
+    // If we collided with 
+        if (otherObject.Name != "Enemy" && otherObject.Name != "Checkpoint"
+            && otherObject.Name != "Laser" && otherObject.Name != "greenflagpole")
+        {
+            this.Owner.Destroy();
+        }
+    }
+    
+    function OnExitView(event : GraphicalEvent)
+    {
+        this.Owner.Destroy();
+    }
+    
+}

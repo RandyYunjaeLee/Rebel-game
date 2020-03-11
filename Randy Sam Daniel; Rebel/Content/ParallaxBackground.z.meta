@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "ParallaxBackground",
+		uint64 ResourceId = 574e5316d27e2a6d,
+	},
+},

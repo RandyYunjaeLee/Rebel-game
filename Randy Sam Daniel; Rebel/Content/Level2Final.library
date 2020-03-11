@@ -1,0 +1,7 @@
+ContentLibrary = 
+{
+	string Name = "Level2Final",
+	uint64 LibraryId = 574ca8916c3aea1c,
+	string SourceControlType = "",
+	bool ReadOnly = false,
+},

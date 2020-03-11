@@ -1,0 +1,27 @@
+class ParallaxBackground : ZilchComponent
+{
+    [Property]
+    var RelativeSpeed : Real = 0.5;
+
+    [Property]
+    var PlayerObject : CogPath = null;
+
+    var PreviousPlayerPosition : Real3 = Real3();
+
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+      var currentPlayerPosition = this.PlayerObject.Cog.Transform.Translation;
+      var displacement = currentPlayerPosition.X - this.PreviousPlayerPosition.X;
+      var movement = displacement * this.RelativeSpeed;
+      var newPosition = this.Owner.Transform.Translation;
+      newPosition.X -= movement;
+      this.Owner.Transform.Translation = newPosition;
+
+      this.PreviousPlayerPosition = currentPlayerPosition;
+    }
+}

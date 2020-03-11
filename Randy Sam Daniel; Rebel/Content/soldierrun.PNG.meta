@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "soldierrun",
+		uint64 ResourceId = 573e784b9693b3b1,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 576,
+		uint FrameSizeY = 96,
+		uint FrameCount = 1,
+		float FrameDelay = 0.0833333358,
+		float OriginX = 288,
+		float OriginY = 48,
+		float PixelsPerUnit = 16,
+		bool Smoothing = true,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

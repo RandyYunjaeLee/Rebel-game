@@ -1,0 +1,105 @@
+class HP : ZilchComponent
+
+{
+    [Property]
+    var HP : Real = 100;   
+    [Property]
+    var Lives : Real = 3;
+    var Level: Level = Level.Find("GameOver");
+    [Property]
+    var PlayerMelee : SpriteSource = null;
+    var Asdf :Boolean = false;
+    var Time : Real = 0;
+    [Property]
+    var Score : Real = 0;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.Time += (event.Dt*30);
+        if(this.Asdf == true && this.Time<60)
+        { 
+            if(this.Time % 2 == 0)
+            {
+                this.Owner.Sprite.Color = Real4(1,1,1,0.0);
+            }
+            else
+            {
+                this.Owner.Sprite.Color = Real4(1,1,1,1.0);
+            }
+            this.Owner.DodgeBall.Invisnable = true;
+        }
+        else
+        {
+            this.Owner.DodgeBall.Invisnable = false;
+            this.Asdf = false;
+            this.Time = 0;
+        }
+    }
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        if(this.Owner.Sprite.SpriteSource != null && this.Asdf==false)
+        {
+            if(otherObject.Name == "EBullet")
+            {
+                this.HP = this.HP - 1;
+                Console.WriteLine(this.HP);
+                this.Asdf = true;
+            }
+            
+            if(otherObject.Name == "BBullet")
+            {
+                this.HP = this.HP - 2;
+                Console.WriteLine(this.HP);
+                this.Asdf = true;
+            }
+            
+            if(otherObject.Name == "Propeller")
+            {
+                var newPlace = this.Space.LevelSettings;
+                this.Owner.Transform.Translation = newPlace.LevelVars.PlayerPosition;
+                this.HP = this.HP - 1;
+                Console.WriteLine(this.HP);
+                if(this.HP <= 0)
+                { 
+                    this.Lives = this.Lives - 1;
+                    this.HP = 5;
+                    Console.WriteLine(this.Lives);
+                }
+                if(this.Lives == 0)
+                {
+                    this.Owner.Destroy();
+                    this.Space.LoadLevel(this.Level);
+            
+                    if(this.LevelSettings.Hud.HudSpace != null)
+                    {
+                        this.LevelSettings.Hud.HudSpace.Destroy();
+                    }
+                }
+            }
+        }
+        if(this.HP <= 0)
+        {
+            var newPlace = this.Space.LevelSettings;
+            this.Owner.Transform.Translation = newPlace.LevelVars.PlayerPosition;
+            this.HP = 5;
+            Console.WriteLine(this.HP);
+            this.Lives =this.Lives - 1;
+            Console.WriteLine(this.Lives);
+        }
+        if(this.Lives == 0)
+        {
+            this.Owner.Destroy();
+            this.Space.LoadLevel(this.Level);
+            
+            if(this.LevelSettings.Hud.HudSpace != null)
+            {
+                this.LevelSettings.Hud.HudSpace.Destroy();
+            }
+        }
+    }
+}

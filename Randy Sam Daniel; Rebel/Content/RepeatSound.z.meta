@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "RepeatSound",
+		uint64 ResourceId = 5731baf27124124f,
+	},
+},

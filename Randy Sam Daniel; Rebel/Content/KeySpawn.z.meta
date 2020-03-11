@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "KeySpawn",
+		uint64 ResourceId = 5745861ac9c06469,
+	},
+},

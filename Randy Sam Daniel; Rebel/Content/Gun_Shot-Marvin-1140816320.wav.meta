@@ -1,0 +1,11 @@
+AudioContent = 
+{
+	SoundBuilder = 
+	{
+		string Name = "Gun_Shot-Marvin-1140816320",
+		uint64 ResourceId = 576be883387d8463,
+		bool Compressed = true,
+		uint Quality = 254,
+		SoundLoadType LoadType = Decompress,
+	},
+},

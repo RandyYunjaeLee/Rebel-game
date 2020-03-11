@@ -1,0 +1,39 @@
+class DodgeBall : ZilchComponent
+{
+    //This script uses your left mouse button to shot the ball/projectile
+    [Property]
+    var ShotSpeed : Integer = 20;
+    var Invisnable : Boolean = false;
+    function Initialize(init : CogInitializer)
+    {
+        
+        var gamecamera = this.Space.FindObjectByName("Camera");
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        var spawnPosition = this.Owner.Transform.Translation + Real3(0,0,0);
+        //Change Archetype.Dodgeball to whatever projectile you are using
+        var archetypeToSpawn = Archetype.DodgeBall;
+            if(Zero.Keyboard.KeyIsPressed(Keys.Z) && this.Owner.SweptController.Grounded == true && this.Invisnable == false)
+            {
+                var createdBall = this.Space.CreateAtPosition(archetypeToSpawn, spawnPosition);
+                //if the sprite is facing left then the projectile will shoot left here
+                if(this.Owner.Sprite.FlipX == true)
+                {
+                    var direction = -this.Owner.Orientation.WorldForward;
+                    direction = Math.Normalize(direction);
+                    createdBall.RigidBody.Velocity = direction * this.ShotSpeed;
+                }
+                //otherwise it will shoot to the right
+                else
+                {
+                    var direction = this.Owner.Orientation.WorldForward;
+                    direction = Math.Normalize(direction);
+                    createdBall.RigidBody.Velocity = direction * this.ShotSpeed;
+                }
+            }
+    }
+}

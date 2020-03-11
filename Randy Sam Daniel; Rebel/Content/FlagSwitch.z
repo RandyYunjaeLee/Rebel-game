@@ -1,0 +1,18 @@
+class FlagSwitch : ZilchComponent
+{
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        if(otherObject.Name == "Player"){
+            var spawn = this.Owner.Transform.Translation;
+            var archetypeToSpawn = Archetype.BlueFlag;
+            var gameOver = this.Space.CreateAtPosition(archetypeToSpawn, spawn);
+            this.Owner.Destroy();
+        }
+    }
+}

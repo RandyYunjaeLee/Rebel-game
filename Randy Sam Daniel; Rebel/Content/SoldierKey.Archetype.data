@@ -1,0 +1,93 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "Enemy",
+	},
+	Archetyped = 
+	{
+		string Name = "574586e8f9323bd6:SoldierKey",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [76.654953, 7.12060404, 0],
+		Vec3 Scale = [0.600000024, 0.600000024, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [0.819999993, 0.599009931, 0.368999988, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "5730fdcec75f4b22:Six",
+		string SpriteSource = "5730fe878600124d:SoldierRuns",
+		bool RenderMask = false,
+		bool FlipX = false,
+		bool FlipY = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	EBullet = 
+	{
+		string ERun = "5730fe878600124d:SoldierRuns",
+		string EShoot = "57430f904223707d:soldiershots",
+		float Speed = 3,
+		float LeftBoundary = 0,
+		float RightBoundary = 3,
+		CogPath TargetObject = 
+		{
+			string Path = ":/Player",
+			bool ErrorOnResolveToNull = false,
+			bool ErrorOnPathCantCompute = false,
+			bool ErrorOnDirectLinkFail = false,
+			bool UpdateCogOnPathChange = true,
+			bool UpdatePathOnCogChange = true,
+			bool UpdateCogOnInitialize = true,
+			bool ResolvedNullErrorOccurred = false,
+			uint ResolvedCog = 2,
+			CogPathPreference PathPreference0 = CogRelative,
+			CogPathPreference PathPreference1 = SpaceRelative,
+			CogPathPreference PathPreference2 = Absolute,
+		},
+		float ChaseSpeed = 2,
+		Vec3 First = [0, 0, 0],
+		float ShootDelay = 1.36000001,
+		float NextShot = 0,
+	},
+	BoxCollider = 
+	{
+		bool Ghost = true,
+		bool SendsMessages = true,
+		bool Seamless = true,
+		string MaterialName = "57471d54900a26da:Soldier",
+		string SerializedGroupName = "4e740859314e5515:DefaultGroup",
+		Vec3 Offset = [0, 0, 0],
+		Vec3 Size = [0.75, 1.39999998, 0.5],
+	},
+	KeySpawn = 
+	{
+		string PlayerMelee = "5731b290d77242e5:Meley",
+		float HP = 5,
+	},
+	SoundEmitter = 
+	{
+		float Volume = 1,
+		float Pitch = 0,
+		bool Positional = true,
+		int Version = 1,
+	},
+	SimpleSound = 
+	{
+		bool StartPlaying = false,
+		string CueName = "4e1bd44008b4dc2a:DefaultCue",
+	},
+},

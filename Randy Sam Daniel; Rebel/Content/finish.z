@@ -1,0 +1,45 @@
+class Finish : ZilchComponent
+{
+    //HealthText is the SpriteText that I used to show the health of the player
+    //this can be given any name you chose and update it through the script
+    //for this code to work the sprite text you are updating must be give THE SAME NAME as this variable
+    var HealthText : Cog;
+    var LiveText : Cog;
+    //Name given to the variable that stores the user controlled player information
+    var Player : Cog;
+    var Score : Cog; 
+    var Final : Cog; 
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        //stores the user controlled player information so that we can quickly find it
+        //without exhausting resources
+        this.Player = this.Space.FindFirstObjectByName("Player");
+        if(this.HealthText == null)
+        {
+            this.HealthText = this.Space.FindObjectByName("HealthText");
+        }
+        if(this.LiveText == null)
+        {
+            this.LiveText = this.Space.FindObjectByName("Lives");
+        }
+        if(this.Score == null)
+        {
+            this.Score = this.Space.FindFirstObjectByName("Score");
+        }
+        if(this.Final== null)
+        {
+            this.Final = this.Space.FindFirstObjectByName("Final");
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //this the main part of the script, it updates the hud to display the player's health
+            this.HealthText.SpriteText.Text = "`this.Player.HP.HP`";
+            this.LiveText.SpriteText.Text = "`this.Player.HP.Lives`";
+            this.Score.SpriteText.Text = "`this.Player.HP.Score`/ 34";
+            var fdsa = (this.Player.HP.Score * 10) + (this.Player.HP.Lives*5) + this.Player.HP.HP;
+            this.Final.SpriteText.Text =  "`fdsa`";
+    }
+}

@@ -1,0 +1,61 @@
+class Hud : ZilchComponent
+{
+//written by Aiden Harrington and Connor Blondin-Beale
+
+//Placed on level settings on main level
+    [Property]
+    var HudLevel: Level;
+    var HudSpace: Space;
+    
+    //HealthText is the SpriteText that I used to show the health of the player
+    //this can be given any name you chose and update it through the script
+    //for this code to work the sprite text you are updating must be give THE SAME NAME as this variable
+    var HealthText : Cog;
+    var LiveText : Cog;
+    //Name given to the variable that stores the user controlled player information
+    var Player : Cog;
+    var Keys : Cog;
+    var Score : Cog; 
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.HudSpace = this.GameSession.CreateNamedSpace("Hud", Archetype.Find("Space"));
+        var currentLevelName = this.HudSpace.CurrentLevel;
+        if(currentLevelName != this.HudLevel)
+        {
+            this.HudSpace.LoadLevel(this.HudLevel);
+        }
+        
+        //stores the user controlled player information so that we can quickly find it
+        //without exhausting resources
+        this.Player = this.Space.FindFirstObjectByName("Player");
+        if(this.HealthText == null)
+        {
+            this.HealthText = this.HudSpace.FindObjectByName("HealthText");
+        }
+        if(this.LiveText == null)
+        {
+            this.LiveText = this.HudSpace.FindObjectByName("Lives");
+        }
+        if(this.Keys == null)
+        {
+            this.Keys = this.HudSpace.FindObjectByName("Keys");
+        }
+        if(this.Score == null)
+        {
+            this.Score = this.HudSpace.FindFirstObjectByName("Score");
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //this the main part of the script, it updates the hud to display the player's health
+        if(this.HudSpace != null)
+        {
+            this.HealthText.SpriteText.Text = "`this.Player.HP.HP`";
+            this.LiveText.SpriteText.Text = "`this.Player.HP.Lives`";
+            this.Keys.SpriteText.Text = "`this.Player.Key.NumKey`";
+            this.Score.SpriteText.Text = "`this.Player.HP.Score`";
+        }
+    }
+}

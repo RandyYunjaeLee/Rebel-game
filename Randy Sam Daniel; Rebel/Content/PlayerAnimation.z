@@ -1,0 +1,139 @@
+class PlayerAnimmation : ZilchComponent
+{
+    [Property]
+    var PlayerStand : SpriteSource = null;
+
+    [Property]
+    var PlayerWalk : SpriteSource = null;
+
+    [Property]
+    var PlayerJump : SpriteSource = null;
+    
+    [Property]
+    var PlayerShoot : SpriteSource = null;
+    
+    [Property]
+    var PlayerMelee: SpriteSource = null;
+    
+    var FrameNumber: Real = 0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    // standing state
+    
+        if(this.Owner.PlayerController.Stop==false)
+        {
+            if(this.Owner.Sprite.SpriteSource == this.PlayerStand)
+            {
+                if(this.Owner.SweptController.Grounded==false)
+                {
+                this.Owner.Sprite.SpriteSource = this.PlayerJump;
+                }
+                if(this.Owner.SweptController.Grounded==true)
+                {
+                    if(Zero.Keyboard.KeyIsDown(Keys.Left) || Zero.Keyboard.KeyIsDown(Keys.Right))
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerWalk;
+                    }
+                }
+                    
+                if(Zero.Keyboard.KeyIsPressed(Keys.Up))
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerJump;
+                }
+                
+                if(Zero.Keyboard.KeyIsPressed(Keys.Z)&& this.Owner.DodgeBall.Invisnable==false)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerShoot;
+                }
+                
+                if(Zero.Keyboard.KeyIsPressed(Keys.X))
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerMelee;
+                }
+            }
+            // walking state
+            else if(this.Owner.Sprite.SpriteSource == this.PlayerWalk)
+            {
+                if(this.Owner.SweptController.Grounded==false)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerJump;
+                }
+                if(Zero.Keyboard.KeyIsDown(Keys.Left) == false && Zero.Keyboard.KeyIsDown(Keys.Right) == false)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                }
+
+                if(Zero.Keyboard.KeyIsPressed(Keys.Up))
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerJump;
+                }
+                
+                if(this.Owner.PlayerController.Stop==false)
+                {
+                    if(Zero.Keyboard.KeyIsPressed(Keys.Z)&& this.Owner.DodgeBall.Invisnable==false)
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerShoot;
+                    }
+                    
+                    if(Zero.Keyboard.KeyIsPressed(Keys.X))
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerMelee;
+                    }
+                }
+            }
+            // jumping state
+            else if(this.Owner.Sprite.SpriteSource == this.PlayerShoot)
+            {
+                if(this.Owner.Sprite.CurrentFrame == 3)
+                {
+                    if(Zero.Keyboard.KeyIsDown(Keys.Left) == false && Zero.Keyboard.KeyIsDown(Keys.Right) == false)
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                    }
+
+                    if(Zero.Keyboard.KeyIsPressed(Keys.Up))
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerJump;
+                    }
+
+                    if(Zero.Keyboard.KeyIsDown(Keys.Left) || Zero.Keyboard.KeyIsDown(Keys.Right))
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerWalk;
+                    }
+                    if(Zero.Keyboard.KeyIsPressed(Keys.X))
+
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerMelee;
+                    }
+                }
+            }
+            else if(this.Owner.Sprite.SpriteSource == this.PlayerJump)
+            {
+                    if(this.Owner.SweptController.Grounded)
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                    }
+            }
+            else if(this.Owner.Sprite.SpriteSource == this.PlayerMelee)
+            {
+                if(this.Owner.Sprite.CurrentFrame == 3)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                }
+            }
+        }
+        else
+        {
+            if(this.Owner.Sprite.SpriteSource == this.PlayerWalk)
+            {
+                this.Owner.Sprite.SpriteSource = this.PlayerWalk;
+            }
+        }
+    }
+}

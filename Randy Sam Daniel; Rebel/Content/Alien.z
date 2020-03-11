@@ -1,0 +1,94 @@
+class Alien : ZilchComponent
+{
+    [Property]
+    var Projectile : Archetype = null;
+    [Property]
+    var TargetObject: CogPath = null;
+    var Start : Real = 0;
+    var Start2 : Real = 0;
+    [Property]
+    var ShotSpeed : Real = 20; 
+    var ChaseDirection: Real = Real();
+    var ChaseDirection2 : Real3= Real3();
+    var Direct : Boolean = false;
+    var DistanceFromTarget: Real = 0.0;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        var position = this.Owner.Transform.Translation + Real3(-0.5, -0.2,0);
+        this.CalculateChaseDirectionAndDistance();
+        if(this.ChaseDirection<0)
+        {
+            this.Owner.Sprite.FlipX = false;
+            this.Direct = false;
+        }
+        else
+        {
+            this.Owner.Sprite.FlipX = true;
+            this.Direct = true;
+        }
+        if (this.Start2 == 0 && this.Owner.Sprite.CurrentFrame == 7)
+        {
+            var bullet = this.Space.CreateAtPosition(this.Projectile, position);
+                this.Owner.SimpleSound.Play();
+            if (bullet != null)
+            {
+                
+                var direction = this.Owner.Orientation.WorldForward*-1;
+                if(this.Direct == true)
+                {
+                    direction= direction *-1;
+                }
+                direction = Math.Normalize(direction);
+                
+                bullet.RigidBody.Velocity = direction * this.ShotSpeed;
+            }
+            this.Start2 = 1;
+        }
+        else if(this.Owner.Sprite.CurrentFrame != 7)
+        {
+            this.Start2 = 0;
+        }
+        if(this.Owner.Sprite.CurrentFrame == 9)
+        {
+            if(this.Start == 0)
+            {
+                var bullet2 = this.Space.CreateAtPosition(this.Projectile, position);
+                this.Owner.SimpleSound.Play();
+                var direction = this.Owner.Orientation.WorldForward;
+                
+                if (bullet2 != null)
+                {
+                    direction = this.Owner.Orientation.WorldForward*-1;
+                    if(this.Direct == true)
+                    {
+                        direction= direction *-1;
+                    }
+                    direction = Math.Normalize(direction);
+                    
+                    bullet2.RigidBody.Velocity = direction * this.ShotSpeed;
+                }
+            }
+            this.Start = 1;
+        }
+        else if(this.Owner.Sprite.CurrentFrame != 9)
+        {
+            this.Start = 0;
+
+        }
+    }
+    function CalculateChaseDirectionAndDistance()
+    {
+        // Get direction toward target
+        this.ChaseDirection = this.TargetObject.Cog.Transform.Translation.X - this.Owner.Transform.Translation.X;
+        // Extract distance by finding magnitude
+        this.DistanceFromTarget = Math.Length(Real3(this.ChaseDirection, 0, 0));
+        // Extract direction by normalizing
+        this.ChaseDirection2 = Math.Normalize(Real3(this.ChaseDirection, 0, 0));
+        
+    }
+}

@@ -1,0 +1,64 @@
+class EnemySheildsDown : ZilchComponent
+{
+    [Property]
+    var PlayerMelee: SpriteSource = null;
+    var Asdf :Boolean = false;
+    var OtherObject :Cog = null;
+    var Asdf2 : Boolean = true;
+    function Initialize(init : CogInitializer)
+    {
+
+        Zero.Connect(this.Owner, Events.CollisionStarted,     this.OnCollisionStarted);
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionEnded,     this.OnCollisionEnded);
+    }
+    
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        
+        if(this.Asdf == false)
+        {
+            this.OtherObject = event.OtherObject;
+            if(this.OtherObject.Name == "Player")
+            {
+                this.Asdf = true;
+                Console.WriteLine("P2");
+            }
+            else if(this.OtherObject.Name == "Laser")
+            {
+                this.Asdf = false;
+                this.OtherObject.Destroy();
+                Console.WriteLine("P1");
+            }
+            else
+            {
+                this.Asdf = false;
+                Console.WriteLine("P1");
+            }
+        }
+    }
+        
+    function OnCollisionEnded(event : CollisionEvent)
+    {
+        var other = event.OtherObject;
+        if(this.Asdf == true && other.Name == "Player")
+        {
+            this.Asdf = false;
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+       if(this.Asdf == true)
+       { 
+                if (this.OtherObject.Sprite.SpriteSource == this.PlayerMelee  && this.OtherObject.Sprite.CurrentFrame == 2)
+                {
+                    Console.WriteLine("P3");
+                    this.Owner.Destroy();
+                    this.Asdf == true;
+                }
+        }
+    }
+    
+
+}

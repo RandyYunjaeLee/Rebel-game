@@ -1,0 +1,64 @@
+class KeySpawn : ZilchComponent
+{
+    [Property]
+    var PlayerMelee: SpriteSource = null;
+    var Asdf :Boolean = false;
+    var OtherObject :Cog = null;
+    [Property]
+    var HP : Real = 0;
+    var Time : Real = 2;
+    function Initialize(init : CogInitializer)
+    {
+
+        Zero.Connect(this.Owner, Events.CollisionStarted,     this.OnCollisionStarted);
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionEnded,     this.OnCollisionEnded);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.Time += event.Dt;
+        if(this.Asdf == true)
+        { 
+            if(this.Time >= 2)
+            {
+                if(this.OtherObject.Sprite != null)
+                {
+                    if (this.OtherObject.Sprite.SpriteSource == this.PlayerMelee && this.OtherObject.Sprite.CurrentFrame == 2)
+                    {
+                        this.Time = 0;
+                        this.HP -=1;
+                    }
+                }
+            }
+        }
+        if(this.HP == 0)
+        {
+            var projectileObject = this.Space.CreateAtPosition(Archetype.Find("Key"), this.Owner.Transform.Translation);
+
+            var player = this.Space.FindObjectByName("Player");
+            player.HP.Score +=1;
+            this.Owner.Destroy();
+        }
+    }
+    
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        this.OtherObject = event.OtherObject;
+
+    // If we collided with the block,
+        if (this.OtherObject.Name == "Laser")
+        {
+            this.HP -=1;
+        }
+        if(this.OtherObject.Name == "Player")
+        {
+            this.Asdf = true;
+        }
+    }
+    function OnCollisionEnded(event : CollisionEvent)
+    {
+        this.OtherObject = null;
+        this.Asdf = false;
+    }
+}

@@ -1,0 +1,65 @@
+class PlayerController : ZilchComponent
+{
+    [Property]
+    var PlayerMelee: SpriteSource = null;
+    var Stop:Boolean = false;
+    [Property]
+    var PlayerShoot : SpriteSource = null;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        //when hitting a checkpoint, save this position in the level
+        if(event.OtherObject.Checkpoint != null)
+        {
+            var checkpointPosition = event.OtherObject.Transform.Translation;
+
+            checkpointPosition.Y = this.Owner.Transform.Translation.Y;
+
+            var newPlace = this.Space.LevelSettings;
+            newPlace.LevelVars.PlayerPosition = checkpointPosition;
+        }
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        var movement = Real3(0.0, 0.0, 0.0);
+
+        // Step 2b
+        // at the end, update
+        // control left, right, and up
+        if(this.Owner.Sprite.SpriteSource != this.PlayerMelee && this.Owner.Sprite.SpriteSource != this.PlayerShoot && this.Stop != true)
+
+        {
+            if(Zero.Keyboard.KeyIsDown(Keys.Left))
+            {
+                movement.X -= 1.0;
+                this.Owner.Sprite.FlipX = true;
+            }
+
+            if(Zero.Keyboard.KeyIsDown(Keys.Right))
+            {
+                movement.X += 1.0;
+                this.Owner.Sprite.FlipX = false;
+            }
+
+            if(Zero.Keyboard.KeyIsPressed(Keys.Up))
+            {
+                this.Owner.SweptController.Jump();
+                
+            }
+            if(Zero.Keyboard.KeyIsUp(Keys.Up))
+            {
+                if(this.Owner.SweptController.Jumping)
+                {
+                    this.Owner.SweptController.JumpCancel();
+                }
+            }
+        }
+            //                                2b.i      2b.ii
+        this.Owner.SweptController.Update(movement, event.Dt);
+    }
+}

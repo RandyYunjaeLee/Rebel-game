@@ -1,0 +1,29 @@
+class Key : ZilchComponent
+{
+    var OtherObject :Cog = null;
+    [Property]
+    var NumKey:Real = 0;
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted,     this.OnCollisionStarted);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        this.OtherObject = event.OtherObject;
+
+    // If we collided with the block,
+        if (this.OtherObject.Name == "Key")
+        {
+            this.NumKey +=1;
+            this.OtherObject.Destroy();
+        }
+        
+        if (this.OtherObject.Name == "Door" && this.NumKey > 0)
+        {
+            this.OtherObject.Destroy();
+            this.NumKey -=1;
+        }
+    }
+}

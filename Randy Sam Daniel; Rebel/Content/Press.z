@@ -1,0 +1,26 @@
+class Press : ZilchComponent
+{
+    var Time : Real = 0;
+        var Level1: Level = Level.Find("Level1");
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.Time += (event.Dt*2);
+        if(this.Time as Integer % 2 == 0)
+        {
+            this.Owner.SpriteText.Color = Real4(0,0,1,0.0);
+        }
+        else
+        {
+            this.Owner.SpriteText.Color = Real4(1,1,1,1.0);
+        }
+    }
+    function OnMouseUp(event : ViewportMouseEvent)
+    {
+        this.Space.LoadLevel(this.Level1);
+    }
+}

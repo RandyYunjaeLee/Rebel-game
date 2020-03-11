@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "FlagSwitch",
+		uint64 ResourceId = 574e53a6cfe7fa78,
+	},
+},

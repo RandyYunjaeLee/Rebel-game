@@ -1,0 +1,130 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "Player",
+	},
+	Archetyped = 
+	{
+		string Name = "57359928efe395d0:Player",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [28.1084137, 13.8925362, 0.200000003],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [1, 1, 1, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "5730fdd8c92b98ef:Seven",
+		string SpriteSource = "5726846b04bf3195:Stand000",
+		bool RenderMask = false,
+		bool FlipX = false,
+		bool FlipY = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	RigidBody = 
+	{
+		bool Static = false,
+		bool Asleep = false,
+		bool Kinematic = false,
+		bool RotationLocked = false,
+		bool Mode2D = true,
+		bool AllowSleep = true,
+		bool Inherit2DMode = true,
+		Vec3 Velocity = [0, 0, 0],
+		Vec3 AngularVelocity = [0, 0, 0],
+	},
+	BoxCollider = 
+	{
+		bool Ghost = false,
+		bool SendsMessages = true,
+		bool Seamless = true,
+		string MaterialName = "4de020863e872da8:DefaultPhysicsMaterial",
+		string SerializedGroupName = "4e740859314e5515:DefaultGroup",
+		Vec3 Offset = [0.0199999996, 0.0450000018, 0],
+		Vec3 Size = [0.234999999, 0.649999976, 0.5],
+	},
+	PlayerAnimmation = 
+	{
+		string PlayerStand = "5726846b04bf3195:Stand000",
+		string PlayerWalk = "57277a48b66ce679:Walky",
+		string PlayerJump = "5731bfecd3909b64:Jump000",
+		string PlayerShoot = "572687815f24d69d:Shooty",
+		string PlayerMelee = "5731b290d77242e5:Meley",
+	},
+	PlayerController = 
+	{
+		string PlayerMelee = "5731b290d77242e5:Meley",
+		string PlayerShoot = "572687815f24d69d:Shooty",
+	},
+	Orientation = 
+	{
+		Vec3 GlobalUp = [0, 1, 0],
+		Vec3 UpVector = [0, 0, 1],
+		Vec3 ForwardVector = [1, 0, 0],
+		OrientationBases DefaultBases = ForwardXUpZ,
+	},
+	DodgeBall = 
+	{
+		int ShotSpeed = 25,
+	},
+	HP = 
+	{
+		float HP = 5,
+		float Lives = 5,
+		string PlayerMelee = "5731b290d77242e5:Meley",
+		float Score = 0,
+	},
+	SoundEmitter = 
+	{
+		float Volume = 1,
+		float Pitch = 0,
+		bool Positional = true,
+		int Version = 1,
+	},
+	SimpleSound = 
+	{
+		bool StartPlaying = false,
+		string CueName = "4e1bd44008b4dc2a:DefaultCue",
+	},
+	SweptController = 
+	{
+		bool LockZAxis = false,
+		bool ForwardEvents = false,
+		float Gravity = 18,
+		float JumpSpeed = 11,
+		float JumpCancelFactor = 1,
+		float MaxMoveSpeed = 6,
+		float MaxFallSpeed = 10,
+		float GroundAcceleration = 50,
+		float AirAcceleration = 7,
+		float GroundDeceleration = 50,
+		float AirDeceleration = 10,
+		float MaxGroundSlope = 45,
+		float MaxCeilingSlope = 45,
+		float GroundSnapDistance = 0.100000001,
+		Vec3 ControllerVelocity = [0, 0, 0],
+		bool Grounded = true,
+		bool Jumping = false,
+		float GroundTraction = 1,
+		float AirTraction = 1,
+	},
+	Key = 
+	{
+		float NumKey = 0,
+	},
+},

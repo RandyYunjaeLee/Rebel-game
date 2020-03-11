@@ -1,0 +1,50 @@
+class Timed : ZilchComponent
+{
+    [Property]
+    var Projectile : Archetype = null;
+    
+    [Property]
+    var ShotSpeed : Real = 20; 
+    
+    [Property]
+    var SpawnTime : Real = 2.0;
+    [Property]
+    var TimeSinceLastSpawn : Real = 0.0;
+    [Property]
+    var Start : Boolean = false;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.ExitView, this.OnExitView);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Start == true)
+        {
+            this.TimeSinceLastSpawn += event.Dt;
+        }
+        var position = this.Owner.Transform.Translation + Real3(-0.5, 0.3,0);
+        if (this.TimeSinceLastSpawn > this.SpawnTime)
+        {
+            
+            var bullet = this.Space.CreateAtPosition(this.Projectile, position);
+        
+            if (bullet != null)
+            {
+                var direction = this.Owner.Orientation.WorldForward;
+                
+                direction = Math.Normalize(direction);
+                
+                bullet.RigidBody.Velocity = direction * this.ShotSpeed;
+                
+                this.TimeSinceLastSpawn = 0.0;
+            }
+        }
+    }
+    
+    function OnExitView(event : GraphicalEvent)
+    {
+        this.Start = false;
+    }
+}

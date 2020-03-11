@@ -1,0 +1,13 @@
+class Restart : ZilchComponent
+{
+    var Level1: Level = Level.Find("LevelStart");
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    }
+
+    function OnMouseUp(event : ViewportMouseEvent)
+    {
+        this.Space.LoadLevel(this.Level1);
+    }
+}

@@ -1,0 +1,63 @@
+class LevelSwitch : ZilchComponent
+{
+    var Start:Boolean = false;
+    [Property]
+    var LoadTime : Real = 0.0;
+    [Property]
+    var LevelToLoad : Level = null;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.CollisionStarted,     this.OnCollisionStarted);
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Start==true)
+        {
+            this.LoadTime += event.Dt;
+            Console.WriteLine(this.LoadTime);
+        }
+        if (this.LoadTime > 3)
+        {
+    // If we collided with the block                
+            var currentLevelName = this.Space.CurrentLevel;
+            if(this.LevelSettings.Hud.HudSpace != null)
+            {
+                this.LevelSettings.Hud.HudSpace.Destroy();
+            }
+            var hpKeep = this.Space.FindFirstObjectByName("Player").HP.HP;
+            var liveKeep = this.Space.FindFirstObjectByName("Player").HP.Lives;
+            var scoreKeep = this.Space.FindFirstObjectByName("Player").HP.Score;
+            var space = this.LoadLevel(this.LevelToLoad);
+                // switch to Level2.
+            if(space.FindFirstObjectByName("Player") != null)
+            {
+                space.FindFirstObjectByName("Player").HP.HP = hpKeep;
+                space.FindFirstObjectByName("Player").HP.Lives = liveKeep;
+                space.FindFirstObjectByName("Player").HP.Score = scoreKeep;
+            }
+        }
+    }
+    
+        function LoadLevel(level: Level) : Space
+        {
+            var space = this.GameSession.CreateSpace(Archetype.Find("Space"));
+            space.LoadLevel(level);
+            this.Space.Destroy();
+            return space;
+        }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        if (otherObject.Name == "Player")
+        {
+            this.Start = true;
+            otherObject.HP.Lives +=1;
+            otherObject.PlayerController.Stop = true;
+        }
+        
+    }
+
+}

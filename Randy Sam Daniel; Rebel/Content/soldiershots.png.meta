@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "soldiershots",
+		uint64 ResourceId = 57430f904223707d,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 144,
+		uint FrameSizeY = 109,
+		uint FrameCount = 8,
+		float FrameDelay = 0.166666672,
+		float OriginX = 95,
+		float OriginY = 54,
+		float PixelsPerUnit = 23,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

@@ -1,0 +1,240 @@
+class EBullet : ZilchComponent
+{
+    // Pacing Properties and variables
+    var InitialPos : Real;
+    var WithinBoundaries : Boolean = true;
+    [Property]
+    var ERun : SpriteSource =null;
+    [Property]
+    var EShoot : SpriteSource =null;
+    var LastLoc : Real = 0.0;
+    [Property]
+    var Speed : Real = 5.0;
+    [Property]
+    var LeftBoundary : Real = 0.0;
+    [Property]
+    var RightBoundary : Real = 5.0;
+    var PaceDirection: Real3 = Real3(0.0, 0.0, 0.0);
+    var StartPosition: Real3 = Real3();
+    var ChaseDirection2 : Real3= Real3();
+    // Chasing Properties and variables
+    [Property]
+    var TargetObject: CogPath = null;
+    [Property]
+    var ChaseSpeed: Real = 1.0;
+    var ChaseTriggerDistance: Real = 5.0;
+    var DistanceFromTarget: Real = 0.0;
+    var ChaseDirection: Real = Real();
+    var ChaseColor:Real4 = Real4(1.0, 0.0, 0.0, 1.0);
+    var TargetIsWithinRange: Boolean = false;
+    [Property]
+    var First: Real3 = Real3();
+    // Shooting Properties
+    [Property]
+    var ShootDelay: Real = 1.0;
+    [Property]
+    var NextShot: Real = 2.0;
+
+    // Variables for smoothing state transitions
+    var OriginalColor: Real4 = Real4();
+    var Cats: Real = 0.0;
+    
+    // Dependencies
+    [Dependency]
+    var Transform: Transform = null;
+    [Dependency]
+    var Sprite: Sprite = null;
+    
+    var TargetStop: Real3 = Real3();
+    var TargetStopX: Integer = 0;
+    var OwnerXTranslation: Integer = 0;
+    var Stop: Boolean = false;
+    function Initialize(init : CogInitializer)
+    {
+        // We need to update the enemy's behavior every logic 
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        // Have to know where we started to know how far we've moved
+        this.StartPosition = this.Owner.Transform.Translation;
+        this.OriginalColor = this.Owner.Sprite.Color;
+        this.InitialPos = this.Owner.Transform.Translation.X;
+        this.First = this.Owner.Transform.Translation;
+        this.LeftBoundary = this.InitialPos - this.LeftBoundary;
+        this.RightBoundary = this.InitialPos + this.RightBoundary;
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // Calculate the direction and distance of target
+        this.CalculateChaseDirectionAndDistance();
+        // Evaluate whether Ai should chase, shoot or pace
+        this.TargetIsWithinRange = (this.DistanceFromTarget <= this.ChaseTriggerDistance);
+        
+        var poop = Real3(-3.5,0,0);
+        var asdf = Real3(0.1,0,0);
+        
+        if (this.TargetIsWithinRange)
+        {
+            //if the target is not in shooting range distance chase
+            if(this.Stop == false)
+            {
+                //Make the Enemey run
+                if(this.Owner.Sprite.SpriteSource != this.ERun)
+                {
+                    this.Owner.Sprite.SpriteSource=this.ERun;
+                    this.Owner.BoxCollider.Offset = asdf;
+                }
+                //Go after target
+                this.ChaseTarget(event);
+                
+                //see if the target is the set distance away
+                if(this.Owner.Transform.Translation.X - this.TargetObject.Cog.Transform.Translation.X <= 5)
+                {
+                    this.Stop = true;
+                    this.Owner.Sprite.FlipX=false;
+                }
+                else if (this.Owner.Transform.Translation.X - this.TargetObject.Cog.Transform.Translation.X >= -5)
+                {
+                    this.Stop = true;
+                    this.Owner.Sprite.FlipX=true;
+                }
+            }
+            else 
+            {
+                //make the enemy look like it is shooting and lock the poition
+                if(this.Owner.Sprite.SpriteSource != this.EShoot)
+                {
+                    this.Owner.Sprite.SpriteSource = this.EShoot;
+                    
+                }
+                //check what way to face
+                if(this.ChaseDirection <0)
+                {
+                    this.Owner.Sprite.FlipX=false;
+                    this.Owner.BoxCollider.Size = Real3(6,2.8,1);
+                    this.Owner.BoxCollider.Offset = asdf;
+                }
+                else if (this.ChaseDirection>0)
+                {
+                    this.Owner.Sprite.FlipX=true;
+                    this.Owner.BoxCollider.Size = Real3(6,2.8,1);
+                    this.Owner.BoxCollider.Offset = poop;
+                }
+                //otherwise shoot the target
+                this.ShootAtTarget(event);
+                
+                //check the distance again
+                if(this.Owner.Transform.Translation.X - this.TargetObject.Cog.Transform.Translation.X >= 5)
+                {
+                    this.Stop = true;
+                }
+                else if (this.Owner.Transform.Translation.X - this.TargetObject.Cog.Transform.Translation.X <= -5)
+                {
+                    this.Stop = true;
+                }
+            }
+        }
+        else 
+        {
+            //Make the enemy run if the target is not in range of anything
+            if(this.Owner.Sprite.SpriteSource != this.ERun)
+            {
+                this.Owner.Sprite.SpriteSource=this.ERun;
+            }
+            this.PaceBackAndForth(event);
+        }
+    }
+
+    function PaceBackAndForth(event: UpdateEvent)
+    {
+        this.Move(event.Dt);
+        
+        //if the object is past the left boundary
+        if (this.Owner.Transform.Translation.X < this.LeftBoundary)
+        {
+            //change directions.
+            this.Speed *= -1;
+            
+            this.Owner.Sprite.FlipX = true;
+        }
+        //if the object is past the right boundary,
+        else if (this.Owner.Transform.Translation.X > this.RightBoundary)
+        {
+            //change directions.
+            this.Speed *= -1;
+            
+            this.Owner.Sprite.FlipX = false;
+        }
+        if(this.Speed<0)
+        {
+            this.Owner.Sprite.FlipX = false;
+        }
+        if(this.Speed>0)
+        {
+            this.Owner.Sprite.FlipX = true;
+        }
+    }
+        
+    function Move(deltaTime : Real)
+    {
+        var movement = Real3(0.0, 0.0, 0.0);
+        var currentPos = this.Owner.Transform.Translation;
+        
+        movement += Real3(this.Speed, 0.0, 0.0);
+
+        currentPos += movement * deltaTime;
+        
+        this.Owner.Transform.Translation = currentPos;
+    }
+
+    function CalculateChaseDirectionAndDistance()
+    {
+        // Get direction toward target
+        this.ChaseDirection = this.TargetObject.Cog.Transform.Translation.X - this.Owner.Transform.Translation.X;
+        // Extract distance by finding magnitude
+        this.DistanceFromTarget = Math.Length(Real3(this.ChaseDirection, 0, 0));
+        // Extract direction by normalizing
+        this.ChaseDirection2 = Math.Normalize(Real3(this.ChaseDirection, 0, 0));
+        
+    }
+            
+    function ChaseTarget(event: UpdateEvent)
+    {
+        // Apply movement
+        this.Owner.Transform.Translation += this.ChaseDirection2 * event.Dt * this.ChaseSpeed;
+    }
+            
+    function ShootAtTarget(event: UpdateEvent)
+    {
+        // Don't shoot until the next shot timer is reached
+        if (this.Owner.Sprite.CurrentFrame == 1 && this.Cats == 0)
+        {
+            // Update next shot timer
+            this.Cats = 1;
+            if (this.Owner.SimpleSound.IsPlaying() == false)
+            {
+                this.Owner.SimpleSound.Play();
+            }
+            // Create a projectile originating from the enemy's position
+            var loaction = Real3();
+            if(this.Owner.Sprite.FlipX == true)
+            {
+                loaction = this.Owner.Transform.Translation + Real3(-1,0.4,0);
+            }
+            else
+            {
+                loaction = this.Owner.Transform.Translation + Real3(-0.2,0.4,0);
+            }
+            var projectileObject = this.Space.CreateAtPosition(Archetype.Find("Hop"), loaction);
+            if (projectileObject != null)
+            {
+            // Shoot in the direction of the target (which is the same as the chase Direction)
+            projectileObject.Projectile.Direction = this.ChaseDirection2;
+            // Make sure projectile moves faster than the enemy
+            projectileObject.Projectile.Speed = 15.0 + this.ChaseSpeed;
+            }
+        }
+        else if(this.Owner.Sprite.CurrentFrame != 1)
+        {
+            this.Cats = 0;
+        }
+    }
+}
