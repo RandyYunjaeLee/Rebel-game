@@ -6,7 +6,7 @@ Cog =
 		string ProjectOwner = "",
 		string DefaultLevel = "Level",
 		string ProjectSpace = "Space",
-		string ProjectFolder = "F:\Zero Launcher\Randy Sam Daniel; Rebel",
+		string ProjectFolder = "C:\Users\randy\git\Rebel-game\Randy Sam Daniel; Rebel",
 		uint ProjectEngineRevision = 12624,
 		bool AutoTakeProjectScreenshot = true,
 	},
